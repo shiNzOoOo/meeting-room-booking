@@ -1,0 +1,24 @@
+stages:
+  - build
+
+build-backend:
+  stage: build
+  image: mcr.microsoft.com/dotnet/sdk:8.0
+  script:
+    - cd MeetingRoomAPI
+    - dotnet restore
+    - dotnet build --configuration Release --no-restore
+  only:
+    - main
+    - merge_requests
+
+build-frontend:
+  stage: build
+  image: node:22-alpine
+  script:
+    - cd meeting-room-app
+    - npm ci
+    - npm run build -- --configuration production
+  only:
+    - main
+    - merge_requests
